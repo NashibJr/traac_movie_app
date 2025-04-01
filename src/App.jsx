@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import Input from "./components/Input";
 import "./App.css";
+import { IoSearch } from "react-icons/io5";
+import Library from "./components/LIbrary";
 
 function App() {
-  const [count, setCount] = useState(0);
   const [movies, setMovies] = React.useState([]); // don't temper
 
   // Don't temper
@@ -27,29 +27,50 @@ function App() {
 
     return () => {};
   }, []);
+  // const [filteredMovies, setFilteredMovies] = React.useState([]);
+  // const [search, setSearch] = React.useState("");
+  // const onChangeSearch = (event) => setSearch(event.target.value);
+
+  // React.useEffect(() => {
+  //   setFilteredMovies(movies);
+  // }, [movies]);
+
+  // React.useEffect(() => {
+  //   if (search === "") {
+  //     setFilteredMovies(movies);
+  //   } else {
+  //     setFilteredMovies(
+  //       movies.filter((movie) =>
+  //         movie.title.toLowerCase().includes(search.toLowerCase())
+  //       )
+  //     );
+  //   }
+  // }, [search, movies]);
+  // console.log(filteredMovies, ">>>>>>>");
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="container">
+        <div className="searchArea">
+          <Input
+            name="Search"
+            // value={search}
+            placeholder="Search book by Title"
+            // onChange={onChangeSearch}
+          />
+          <IoSearch className="icon" />
+        </div>
+        <div className="main">
+          {movies.map((movie, index) => (
+            <Library
+              key={index}
+              image={movie.formats["image/jpeg"]}
+              title={movie.title}
+              authors={movie.authors}
+            />
+          ))}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   );
 }
