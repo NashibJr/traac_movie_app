@@ -19,6 +19,10 @@ header {
   font: 600 40px / calc(var(--header-height) / 1.5) "Roboto", sans-serif;
   background-color: #55cc55;
   box-shadow: 0 5px 5px 0 #00000055;
+  & span {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+  }
 }
 .search-form {
   position: relative;
@@ -69,7 +73,7 @@ header {
   border-radius: 10px;
   color: #000000;
   background-color: #ffffff;
-  box-shadow: 0 3px 3px 0 #00000056;
+  box-shadow: 0 3px 5px 0 #00000056;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -88,4 +92,7 @@ header {
     font: 200 1rem "Roboto", sans-serif;
     color: #000000cd;
   }
+}
+.unavailable {
+  color: #00000033;
 }

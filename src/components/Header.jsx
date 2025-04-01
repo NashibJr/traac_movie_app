@@ -3,7 +3,7 @@ import React from "react";
 const Header = () => {
   return (
     <header>
-      Entertainment for <u>every moment</u>
+      Entertainment for <span>every moment</span>
     </header>
   );
 };

@@ -5,7 +5,10 @@ import SearchBar from "./components/SearchBar";
 import MovieList from "./components/MovieList";
 
 function App() {
+  const [searchValue, setSearchValue] = useState("");
+  const [contentAvailable, setContentAvailable] = useState(true);
   const [movies, setMovies] = React.useState([]); // don't temper
+  const [filteredMovies, setFilteredMovies] = useState([]);
 
   // Don't temper
   const fetchMovies = async () => {
@@ -14,6 +17,7 @@ function App() {
       const data = await response.json();
 
       setMovies(data.results);
+      setFilteredMovies(data.results);
     } catch (error) {
       alert(error?.message);
 
@@ -27,12 +31,49 @@ function App() {
 
     return () => {};
   }, []);
-  console.log(movies);
+
+  const handleOnChangeSearch = (e) => setSearchValue(e.target.value);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("Working!!!");
+  };
+
+  React.useEffect(() => {
+    if (searchValue === "") {
+      setFilteredMovies(movies);
+    } else {
+      setFilteredMovies(
+        movies?.filter((movie) =>
+          movie.title.toLowerCase().includes(searchValue.toLowerCase())
+        )
+      );
+    }
+  }, [searchValue]);
+  React.useEffect(() => {
+    if (filteredMovies.length === 0) {
+      setContentAvailable(false);
+    } else {
+      setContentAvailable(true);
+    }
+  }, [filteredMovies]);
   return (
     <div id="frame">
       <Header />
-      <SearchBar onSubmit={(e) => e.preventDefault()} />
-      <MovieList content={movies} />
+      <SearchBar
+        onSubmit={handleSearch}
+        value={searchValue}
+        onChange={handleOnChangeSearch}
+      />
+      {contentAvailable ? (
+        <MovieList content={filteredMovies} />
+      ) : (
+        <div className="unavailable">
+          <h1>
+            Nothing to see here
+            <br /> &gt; - &lt;
+          </h1>
+        </div>
+      )}
     </div>
   );
 }

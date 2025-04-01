@@ -2,7 +2,6 @@ import React from "react";
 import MovieCard from "./MovieCard";
 
 const MovieList = ({ content }) => {
-  console.log(content);
   return (
     <ul className="movie-list">
       {content.map((movie, index) => (
