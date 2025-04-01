@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
+import Header from "./components/Header";
+import SearchBar from "./components/SearchBar";
+import MovieList from "./components/MovieList";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
+  const [contentAvailable, setContentAvailable] = useState(true);
   const [movies, setMovies] = React.useState([]); // don't temper
+  const [filteredMovies, setFilteredMovies] = useState([]);
 
   // Don't temper
   const fetchMovies = async () => {
@@ -14,6 +17,7 @@ function App() {
       const data = await response.json();
 
       setMovies(data.results);
+      setFilteredMovies(data.results);
     } catch (error) {
       alert(error?.message);
 
@@ -28,29 +32,49 @@ function App() {
     return () => {};
   }, []);
 
+  const handleOnChangeSearch = (e) => setSearchValue(e.target.value);
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("Working!!!");
+  };
+
+  React.useEffect(() => {
+    if (searchValue === "") {
+      setFilteredMovies(movies);
+    } else {
+      setFilteredMovies(
+        movies?.filter((movie) =>
+          movie.title.toLowerCase().includes(searchValue.toLowerCase())
+        )
+      );
+    }
+  }, [searchValue]);
+  React.useEffect(() => {
+    if (filteredMovies.length === 0) {
+      setContentAvailable(false);
+    } else {
+      setContentAvailable(true);
+    }
+  }, [filteredMovies]);
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div id="frame">
+      <Header />
+      <SearchBar
+        onSubmit={handleSearch}
+        value={searchValue}
+        onChange={handleOnChangeSearch}
+      />
+      {contentAvailable ? (
+        <MovieList content={filteredMovies} />
+      ) : (
+        <div className="unavailable">
+          <h1>
+            Nothing to see here
+            <br /> &gt; - &lt;
+          </h1>
+        </div>
+      )}
+    </div>
   );
 }
 
