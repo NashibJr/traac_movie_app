@@ -39,6 +39,7 @@ li {
   background-color: rgba(34, 34, 34, 0.2);
   outline: none;
   border: 1px;
+  border-color: darkcyan;
 
   background-color: rgba(135, 135, 135, 0.3);
 }
