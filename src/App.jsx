@@ -5,8 +5,9 @@ import "./App.css";
 
 function App() {
   const [count, setCount] = useState(0);
-  const [movies, setMovies] = React.useState([]);
+  const [movies, setMovies] = React.useState([]); // don't temper
 
+  // Don't temper
   const fetchMovies = async () => {
     try {
       const response = await fetch("https://gutendex.com/books/");
@@ -20,6 +21,7 @@ function App() {
     }
   };
 
+  // Don't temper
   React.useEffect(() => {
     fetchMovies();
 
