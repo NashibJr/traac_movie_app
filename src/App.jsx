@@ -1,56 +1,41 @@
-import React, { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Tasks from "./pages/Tasks";
+import Users from "./pages/Users";
+import Posts from "./pages/Posts";
+import User from "./pages/User";
+import SingleTask from "./pages/SingleTask";
+import Axios from "./pages/Axios";
 
+/**
+ * Features
+ * - Defines routes using components
+ * <Route path='' element={<Home />} />
+ * - Allows dynamic routes.
+ * <Route path="user/:id" element={<UserDetails />} />
+ * - Creates a hierachical routes => nest routes.
+ * - Provides hooks that can programatically route users .useNavigate(), useParams(), useLocation()
+ * - Allows allows protected routes.
+ */
+
+/**
+ * Configuring routes.
+ *  - Wrap the App component in the main.jsx with the BrowserRouter component.
+ *  - We then define our routes in the App Component.
+ *
+ * => Nested Routes. -> Routes in Routes -> The parent route is automatically passed to
+ *      each child paths/routes
+ */
 function App() {
-  const [count, setCount] = useState(0);
-  const [movies, setMovies] = React.useState([]); // don't temper
-
-  // Don't temper
-  const fetchMovies = async () => {
-    try {
-      const response = await fetch("https://gutendex.com/books/");
-      const data = await response.json();
-
-      setMovies(data.results);
-    } catch (error) {
-      alert(error?.message);
-
-      console.log(error, ">>>>");
-    }
-  };
-
-  // Don't temper
-  React.useEffect(() => {
-    fetchMovies();
-
-    return () => {};
-  }, []);
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Routes>
+      <Route path="" element={<Axios />} />
+      <Route path="task/:id" element={<SingleTask />} />
+      <Route path="posts" element={<Posts />} />
+      <Route path="users" element={<Users />}>
+        {/* /users/user-details */}
+        <Route path="user-details" element={<User />} />
+      </Route>
+    </Routes>
   );
 }
 
