@@ -21,6 +21,25 @@
  * To create an axios instance, we call the create method on the axios object.
  * A baseURL is a string that is preppended on every request that is made by an axios
  * instance
+ * config object
+ *    url- It is required. It is the endpoint that the we're making the request to.
+ *    method - The HTTP method, it defaults to get.
+ *    baseURL-
+ *    headers-> Object contains tje custom headers. Content-Type, Authorization
+ *    data-> the data that is sent to the server.
+ *    withCredentials => Cross-Site-Access-Control. => CORS
+ *    onUploadProgress: a fn that enable us to monitor the progress of an upload
+ *    onDownloadProgress: a fn that enable us to monitor the progress of a download
+ *
+ *
+ * interceptors. The enable us intercept requests and responses.
+ * axios.interceptor.[method].use(
+ *  config=>{
+ *    // does the login
+ *    return config
+ * },
+ * error => Promise.reject(error)
+ * )
  */
 
 import React from "react";
@@ -32,10 +51,33 @@ import axios from "axios";
 //     Authorization: "Bearer token",
 //   },
 // });
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWJmZDU5LTNiZGYtNGE2NC04YmNkLWFhOWMxZTFmYjMyZiIsImlhdCI6MTc0NjAyODIwMiwiZXhwIjoxNzQ2MDM1NDAyfQ.P0ySbOBSf-2x2BAvN3GjB91KTGdhg8hMmzVk9M086Ic";
 const client = axios.create();
 client.defaults.baseURL = "http://127.0.0.1:8000/api/v1";
-client.defaults.headers.common.Authorization =
-  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWJmZDU5LTNiZGYtNGE2NC04YmNkLWFhOWMxZTFmYjMyZiIsImlhdCI6MTc0NjAyODIwMiwiZXhwIjoxNzQ2MDM1NDAyfQ.P0ySbOBSf-2x2BAvN3GjB91KTGdhg8hMmzVk9M086Ic";
+client.interceptors.request.use(
+  (config) => {
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// I am getting the response but brfoe the response reaches, i intrecept to check if the
+// user really is authorized to access this resource.
+client.interceptors.response.use(
+  (response) => {
+    if (response.status === 401) {
+      return (window.location.href = "/");
+    }
+
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
 
 const Axios = () => {
   const [students, setStudents] = React.useState([]);
